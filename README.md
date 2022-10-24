@@ -12,7 +12,7 @@ A notes Android App with the help of SQLDelight
 ## Screenshots
 
 <div align="center">
-  <img src="https://github.com/muazdev26/muazdev26.github.io/blob/main/notes_android_app_github.jpeg" width="200px" /><br> 
+  <img src="https://github.com/muazdev26/muazdev26.github.io/blob/main/notes_android_app_github.jpeg"/><br> 
 </div>
 
 ## Tech Stack
