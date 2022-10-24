@@ -19,6 +19,10 @@ A notes Android App with the help of SQLDelight
 
 **Language:** Kotlin
 
+**Local DB:** [SQLDelight](https://github.com/cashapp/sqldelight)
+
 **Android Jetpack libraries:** [Navigation Components](https://developer.android.com/guide/navigation/navigation-getting-started), [ViewBinding](https://developer.android.com/topic/libraries/view-binding)
 
 **Threading:** [Kotlin Flows](https://developer.android.com/kotlin/flow) with [Coroutines](https://developer.android.com/kotlin/coroutines)
+
+**DI:** [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
