@@ -31,7 +31,7 @@ class UpsertNoteFragment : BottomSheetBaseFragment<FragmentUpsertNoteBinding>() 
 
             if (selectedNote.title != "") {
                 etTitle.setText(selectedNote.title)
-                etDesc.setText(selectedNote.description)
+                etDesc.setText(selectedNote.note)
                 tvTitle.text = requireContext().getString(R.string.edit_note)
             }
             ivDone.setOnClickListener {

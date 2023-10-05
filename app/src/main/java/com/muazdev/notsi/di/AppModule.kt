@@ -1,11 +1,11 @@
 package com.muazdev.notsi.di
 
 import android.app.Application
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.muazdev.notsi.NotesDb
 import com.muazdev.notsi.data.local.NotesDataSource
 import com.muazdev.notsi.data.local.NotesDataSourceImpl
-import com.squareup.sqldelight.android.AndroidSqliteDriver
-import com.squareup.sqldelight.db.SqlDriver
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

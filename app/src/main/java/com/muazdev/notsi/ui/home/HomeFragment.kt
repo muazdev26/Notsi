@@ -14,6 +14,7 @@ import com.muazdev.notsi.NotesEntity
 import com.muazdev.notsi.R
 import com.muazdev.notsi.base.BaseFragment
 import com.muazdev.notsi.databinding.FragmentHomeBinding
+import com.muazdev.notsi.domain.NotesModel
 import com.muazdev.notsi.ui.NotesSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -32,7 +33,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.fabAdd.setOnClickListener {
-            notesSharedViewModel.sharedNote.value = NotesEntity(0, "", "")
+            notesSharedViewModel.sharedNote.value = NotesModel(0, "", "")
             findNavController().navigate(R.id.action_homeFragment_to_upsertNoteFragment)
         }
 

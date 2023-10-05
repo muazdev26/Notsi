@@ -1,11 +1,10 @@
 package com.muazdev.notsi.data.local
 
 import com.muazdev.notsi.NotesDb
-import com.muazdev.notsi.NotesEntity
-import com.squareup.sqldelight.runtime.coroutines.asFlow
-import com.squareup.sqldelight.runtime.coroutines.mapToList
+import com.muazdev.notsi.data.mapper.toNotesModel
+import com.muazdev.notsi.domain.NotesModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
 class NotesDataSourceImpl(
@@ -14,14 +13,14 @@ class NotesDataSourceImpl(
 ) : NotesDataSource {
 
     private val queries = notesDb.notesEntityQueries
-    override suspend fun getSingleNote(id: Long): NotesEntity? {
+    override suspend fun getSingleNote(id: Long): NotesModel? {
         return withContext(dispatcher) {
-            queries.getSingleNote(id).executeAsOneOrNull()
+            queries.getSingleNote(id).executeAsOneOrNull()?.toNotesModel()
         }
     }
 
-    override fun getAllNotes(): Flow<List<NotesEntity>> {
-        return queries.getAllNotes().asFlow().mapToList()
+    override fun getAllNotes() = flow {
+        emit(queries.getAllNotes().executeAsList().map { it.toNotesModel() })
     }
 
     override suspend fun deleteNote(id: Long) {

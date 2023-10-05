@@ -5,14 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.muazdev.notsi.NotesEntity
 import com.muazdev.notsi.R
 import com.muazdev.notsi.databinding.ItemNotesBinding
+import com.muazdev.notsi.domain.NotesModel
 
 class NotesAdapter(
     private val onEditClickListener: (position: Int) -> Unit,
     private val onDeleteClickListener: (position: Int) -> Unit
-) : ListAdapter<NotesEntity, NotesAdapter.NotesHolder>(NotesDiffUtil()) {
+) : ListAdapter<NotesModel, NotesAdapter.NotesHolder>(NotesDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = NotesHolder(
         ItemNotesBinding.bind(
@@ -32,7 +32,7 @@ class NotesAdapter(
         fun bind(position: Int) {
             binding.apply {
                 tvTitle.text = currentList[position].title
-                tvDesc.text = currentList[position].description
+                tvDesc.text = currentList[position].note
 
                 ivDelete.setOnClickListener { onDeleteClickListener(position) }
                 itemView.setOnClickListener { onEditClickListener(position) }
@@ -40,11 +40,11 @@ class NotesAdapter(
         }
     }
 
-    class NotesDiffUtil : DiffUtil.ItemCallback<NotesEntity>() {
-        override fun areItemsTheSame(oldItem: NotesEntity, newItem: NotesEntity) =
+    class NotesDiffUtil : DiffUtil.ItemCallback<NotesModel>() {
+        override fun areItemsTheSame(oldItem: NotesModel, newItem: NotesModel) =
             oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: NotesEntity, newItem: NotesEntity) =
+        override fun areContentsTheSame(oldItem: NotesModel, newItem: NotesModel) =
             oldItem == newItem
     }
 
