@@ -1,6 +1,5 @@
 package com.muazdev.notsi.data.local
 
-import com.muazdev.notsi.NotesEntity
 import com.muazdev.notsi.domain.NotesModel
 import kotlinx.coroutines.flow.Flow
 

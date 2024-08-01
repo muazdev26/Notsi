@@ -21,7 +21,6 @@ class UpsertNoteFragment : BottomSheetBaseFragment<FragmentUpsertNoteBinding>() 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentUpsertNoteBinding
         get() = FragmentUpsertNoteBinding::inflate
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -47,6 +46,7 @@ class UpsertNoteFragment : BottomSheetBaseFragment<FragmentUpsertNoteBinding>() 
                         notesSharedViewModel.upsertData(selectedNote.id, title = title, desc = desc)
                     else
                         notesSharedViewModel.upsertData(title = title, desc = desc)
+                    notesSharedViewModel.needToObserveAgain()
                     findNavController().navigateUp()
                 }
             }

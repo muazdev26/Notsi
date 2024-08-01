@@ -10,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.muazdev.notsi.NotesEntity
 import com.muazdev.notsi.R
 import com.muazdev.notsi.base.BaseFragment
 import com.muazdev.notsi.databinding.FragmentHomeBinding
@@ -28,28 +27,43 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentHomeBinding
         get() = FragmentHomeBinding::inflate
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setListeners()
+        setRV()
+        observeNotes()
+        notesSharedViewModel.needToObserveAgain.observe(viewLifecycleOwner) {
+            if (it) {
+                observeNotes()
+                notesSharedViewModel.needToObserveAgain(false)
+            }
+        }
+    }
+
+    private fun setListeners() {
         binding.fabAdd.setOnClickListener {
             notesSharedViewModel.sharedNote.value = NotesModel(0, "", "")
             findNavController().navigate(R.id.action_homeFragment_to_upsertNoteFragment)
         }
+    }
 
+    private fun setRV() {
         notesAdapter = NotesAdapter({ position ->
             notesSharedViewModel.sharedNote.value = notesAdapter.currentList[position]
             findNavController().navigate(R.id.action_homeFragment_to_upsertNoteFragment)
         }, { position ->
             notesSharedViewModel.deleteNote(notesAdapter.currentList[position].id)
+            notesSharedViewModel.needToObserveAgain()
         })
         binding.rvNotes.apply {
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = notesAdapter
         }
+    }
 
-
+    private fun observeNotes() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 notesSharedViewModel.getAllNotes().collect { notes ->
@@ -57,7 +71,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 }
             }
         }
-
     }
+
 
 }

@@ -1,7 +1,9 @@
 CREATE TABLE notesEntity(
     id INTEGER PRIMARY KEY NOT NULL,
     title TEXT NOT NULL,
-    description TEXT NOT NULL
+    description TEXT NOT NULL,
+    dateTime INTEGER NOT NULL DEFAULT 0,
+    isDone INTEGER NOT NULL DEFAULT 0
 );
 
 getSingleNote:
@@ -14,7 +16,7 @@ SELECT *
 FROM notesEntity;
 
 upsertNote: INSERT OR REPLACE INTO notesEntity
-VALUES (?, ?, ?);
+VALUES (?, ?, ?, ?, ?);
 
 deleteNote: DELETE FROM notesEntity
 WHERE id = :id;
