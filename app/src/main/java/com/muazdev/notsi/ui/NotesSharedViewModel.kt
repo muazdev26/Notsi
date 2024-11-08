@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.muazdev.notsi.data.local.NotesDataSource
+import com.muazdev.notsi.domain.NotesDataSource
 import com.muazdev.notsi.domain.NotesModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +22,7 @@ class NotesSharedViewModel @Inject constructor(
     private var _needToObserveAgain = MutableLiveData(false)
     val needToObserveAgain: LiveData<Boolean> = _needToObserveAgain
 
-    fun needToObserveAgain(value : Boolean = true) {
+    fun needToObserveAgain(value: Boolean = true) {
         _needToObserveAgain.value = value
     }
 

@@ -4,7 +4,7 @@ import android.app.Application
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.muazdev.notsi.NotesDb
-import com.muazdev.notsi.data.local.NotesDataSource
+import com.muazdev.notsi.domain.NotesDataSource
 import com.muazdev.notsi.data.local.NotesDataSourceImpl
 import dagger.Module
 import dagger.Provides
