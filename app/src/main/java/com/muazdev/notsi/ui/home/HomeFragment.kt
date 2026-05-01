@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.muazdev.notsi.R
 import com.muazdev.notsi.base.BaseFragment
 import com.muazdev.notsi.databinding.FragmentHomeBinding
-import com.muazdev.notsi.domain.NotesModel
 import com.muazdev.notsi.ui.NotesSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -33,28 +32,21 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         setListeners()
         setRV()
         observeNotes()
-        notesSharedViewModel.needToObserveAgain.observe(viewLifecycleOwner) {
-            if (it) {
-                observeNotes()
-                notesSharedViewModel.needToObserveAgain(false)
-            }
-        }
     }
 
     private fun setListeners() {
         binding.fabAdd.setOnClickListener {
-            notesSharedViewModel.sharedNote.value = NotesModel(0, "", "")
+            notesSharedViewModel.clearSelectedNote()
             findNavController().navigate(R.id.action_homeFragment_to_upsertNoteFragment)
         }
     }
 
     private fun setRV() {
         notesAdapter = NotesAdapter({ position ->
-            notesSharedViewModel.sharedNote.value = notesAdapter.currentList[position]
+            notesSharedViewModel.selectNote(notesAdapter.currentList[position])
             findNavController().navigate(R.id.action_homeFragment_to_upsertNoteFragment)
         }, { position ->
             notesSharedViewModel.deleteNote(notesAdapter.currentList[position].id)
-            notesSharedViewModel.needToObserveAgain()
         })
         binding.rvNotes.apply {
             layoutManager =

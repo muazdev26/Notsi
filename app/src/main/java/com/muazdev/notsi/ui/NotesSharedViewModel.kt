@@ -6,10 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.muazdev.notsi.domain.NotesDataSource
 import com.muazdev.notsi.domain.NotesModel
+import com.muazdev.notsi.util.Event
+import com.muazdev.notsi.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,23 +20,35 @@ class NotesSharedViewModel @Inject constructor(
 ) : ViewModel() {
 
     val sharedNote = MutableStateFlow(NotesModel(0, "", ""))
-    private var _needToObserveAgain = MutableLiveData(false)
-    val needToObserveAgain: LiveData<Boolean> = _needToObserveAgain
 
-    fun needToObserveAgain(value: Boolean = true) {
-        _needToObserveAgain.value = value
+    fun selectNote(note: NotesModel) {
+        sharedNote.value = note
     }
 
-    fun upsertData(id: Long? = null, title: String, desc: String) =
+    fun clearSelectedNote() {
+        sharedNote.value = NotesModel(0, "", "")
+    }
+
+    private val _upsertNoteStatus = MutableLiveData<Event<Resource<NotesModel>>>()
+    val upsertNoteStatus: LiveData<Event<Resource<NotesModel>>> = _upsertNoteStatus
+
+    fun upsertData(id: Long? = null, title: String, desc: String) {
+        if (title.isBlank()) {
+            _upsertNoteStatus.postValue(Event(Resource.error("Kindly enter title", null)))
+            return
+        }
+        if (desc.isBlank()) {
+            _upsertNoteStatus.postValue(Event(Resource.error("Kindly enter description", null)))
+            return
+        }
+
         viewModelScope.launch(Dispatchers.IO) {
             notesDataSource.upsertNote(id = id, title = title, description = desc)
-        }
-
-    fun getAllNotes() = flow {
-        notesDataSource.getAllNotes().collect {
-            emit(it)
+            _upsertNoteStatus.postValue(Event(Resource.success(null)))
         }
     }
+
+    fun getAllNotes() = notesDataSource.getAllNotes()
 
     fun deleteNote(id: Long) = viewModelScope.launch {
         notesDataSource.deleteNote(id)

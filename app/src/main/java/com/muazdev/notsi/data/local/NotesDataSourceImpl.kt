@@ -1,12 +1,13 @@
 package com.muazdev.notsi.data.local
 
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
 import com.muazdev.notsi.NotesDb
 import com.muazdev.notsi.data.mapper.toNotesModel
 import com.muazdev.notsi.domain.NotesDataSource
 import com.muazdev.notsi.domain.NotesModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.util.Calendar
 
@@ -22,9 +23,11 @@ class NotesDataSourceImpl(
         }
     }
 
-    override fun getAllNotes() = flow {
-        emit(queries.getAllNotes().executeAsList().map { it.toNotesModel() })
-    }.flowOn(dispatcher)
+    override fun getAllNotes() = queries.getAllNotes()
+        .asFlow()
+        .mapToList(dispatcher)
+        .map { list -> list.map { it.toNotesModel() } }
+
 
     override suspend fun deleteNote(id: Long) {
         withContext(dispatcher) {

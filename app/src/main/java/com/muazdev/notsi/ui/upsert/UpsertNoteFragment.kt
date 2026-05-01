@@ -10,6 +10,7 @@ import com.muazdev.notsi.R
 import com.muazdev.notsi.base.BottomSheetBaseFragment
 import com.muazdev.notsi.databinding.FragmentUpsertNoteBinding
 import com.muazdev.notsi.ui.NotesSharedViewModel
+import com.muazdev.notsi.util.Status
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,6 +27,8 @@ class UpsertNoteFragment : BottomSheetBaseFragment<FragmentUpsertNoteBinding>() 
 
         val selectedNote = notesSharedViewModel.sharedNote.value
 
+        subscribeToObservers()
+
         binding.apply {
 
             if (selectedNote.title != "") {
@@ -37,17 +40,29 @@ class UpsertNoteFragment : BottomSheetBaseFragment<FragmentUpsertNoteBinding>() 
                 val title = etTitle.text.toString().trim()
                 val desc = etDesc.text.toString().trim()
 
-                if (title.isBlank()) {
-                    showSnackBar("Kindly enter title")
-                } else if (desc.isBlank()) {
-                    showSnackBar("Kindly enter description")
-                } else {
-                    if (selectedNote.title != "")
-                        notesSharedViewModel.upsertData(selectedNote.id, title = title, desc = desc)
-                    else
-                        notesSharedViewModel.upsertData(title = title, desc = desc)
-                    notesSharedViewModel.needToObserveAgain()
-                    findNavController().navigateUp()
+                if (selectedNote.title != "")
+                    notesSharedViewModel.upsertData(selectedNote.id, title = title, desc = desc)
+                else
+                    notesSharedViewModel.upsertData(title = title, desc = desc)
+            }
+        }
+    }
+
+    private fun subscribeToObservers() {
+        notesSharedViewModel.upsertNoteStatus.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { result ->
+                when (result.status) {
+                    Status.SUCCESS -> {
+                        findNavController().navigateUp()
+                    }
+
+                    Status.ERROR -> {
+                        showSnackBar(result.message ?: "An unknown error occurred")
+                    }
+
+                    Status.LOADING -> {
+                        /* No-op */
+                    }
                 }
             }
         }
